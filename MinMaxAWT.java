@@ -17,6 +17,11 @@ public class MinMaxAWT extends Frame
 	private int t = 0;
 	private int max_eiluciu_sk_tekste = 50;
 	private int nr_skaiciu = 0;
+	private double [] didesni_uz_vidurki;
+	private String didesniu_uz_vid_sarasas = "";
+	private double vidurkis;
+	private int didesniu_uz_vid_kiekis = 0;
+	private double maz_uz_vid_suma = 0;
 
 	// Constructor to setup the GUI components and event handlers
 	public MinMaxAWT() {
@@ -100,8 +105,61 @@ public class MinMaxAWT extends Frame
 		}
 			
 	}
+	public double maksReiksmeSkaiciuMasyve () {
+		
+		double maks_reiksme_masyve = skaiciu_masyvas[0];
+		
+		for (int i=1; i < nr_skaiciu; i++){
+			
+			if (skaiciu_masyvas[i] > maks_reiksme_masyve) {
+				
+				maks_reiksme_masyve = skaiciu_masyvas[i];
+			}
+		}
+		
+		return maks_reiksme_masyve;
+	}
 	
- 
+	public double skaiciuMasyveSuma () {
+		
+		double suma = 0;
+		
+		for (int i=0; i < nr_skaiciu; i++){
+			
+			suma += skaiciu_masyvas[i];
+		}
+		
+		return Math.round(suma);
+	}
+	
+	public void masyvoVidurkis () {
+		
+		vidurkis = skaiciuMasyveSuma () / nr_skaiciu;
+		
+	}
+	
+	public void masyvoSkaiciaiDidesniUzVidurki () {
+				
+		int y = 0;
+		
+		didesni_uz_vidurki = new double[ 100 ];
+		
+		for (int i=0; i < nr_skaiciu; i++){
+			
+			if ( skaiciu_masyvas[i] > vidurkis) {
+				
+				didesni_uz_vidurki [y] = skaiciu_masyvas [i];
+				didesniu_uz_vid_sarasas += didesni_uz_vidurki [y] + ", ";
+				y++;
+				
+			} else {
+				
+				maz_uz_vid_suma += skaiciu_masyvas[i];
+			}
+		}
+		didesniu_uz_vid_kiekis = y;
+	}
+	
 	/* ActionEvent handler */
 	@Override
 	public void actionPerformed(ActionEvent evt) {
@@ -112,7 +170,14 @@ public class MinMaxAWT extends Frame
 			readFromFile();
 			taDisplayTekstas.append(showTextFromFile());
 			sudarytiSkaiciuMasyva();
-			taDisplayTekstas.append("Nuskaityta " + (nr_skaiciu) + " skaiciu. \n");
+			taDisplayTekstas.append("Nuskaityta " + (nr_skaiciu) + " skaiciu. \n\n");
+			taDisplayTekstas.append("Maksimali reiksme skaiciu sekoje: " + maksReiksmeSkaiciuMasyve() + "\n");
+			taDisplayTekstas.append("Skaiciu suma: " + skaiciuMasyveSuma() + "\n");
+			masyvoVidurkis();
+			taDisplayTekstas.append("Vidurkis: " + vidurkis + "\n\n");
+			masyvoSkaiciaiDidesniUzVidurki();
+			taDisplayTekstas.append("Skaiciai didesni uz vidurki:\n\n " + didesniu_uz_vid_sarasas + "\n");
+			taDisplayTekstas.append("likusiu skaiciu suma: " + maz_uz_vid_suma);
 			
 		}
 
