@@ -95,7 +95,7 @@ public class SkaiciaiTekste extends Frame
 			while ( ( s = frx.readLine() ) != null ) {
 				
 				System.out.println( s );
-				nuskaitytasTekstas += s;
+				nuskaitytasTekstas += s + "\n";
 				
 				for ( int i = 0; i < s.length(); i++ ) {
 					
