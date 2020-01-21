@@ -17,10 +17,20 @@ public class SkaiciaiTekste extends Frame
 	
 	private String s;
 	private String [] ss;
+	private String [] tekstas_po_simb;
+	private String [] sveiku_sk_masyvas;
 	private String nuskaitytasTekstas;
+	private String sveiku_sk_sarasas;
+	private String [] realiu_sk_masyvas;
+	private String realiu_sk_sarasas;
+	private String Tekstas;
+	private int n = 0;
 	private int b = 0;
 	private int t = 0;
+	private int c = 0;	
+	private int d = 0;
 	private int kiekis_skaitmenu = 0;
+	private int ta_simboliu = 0;
 	
 
 
@@ -31,8 +41,8 @@ public class SkaiciaiTekste extends Frame
 		//add(new Label("Maks., sumos, kiekio, vid. skaiciavimas"));   // "super" Frame adds an anonymous Label
 		btnNuskaityti = new Button("Nuskaityti teksta");  // Construct the Button
 		btnSkaitmenys = new Button("Skaitmenys");
-		btnSveiki = new Button("Sveiki skaičiai");
-		btnRealus = new Button("Realus skaičiai");
+		btnSveiki = new Button("Sveiki skaiciai");
+		btnRealus = new Button("Realus skaiciai");
 		btnSuPrasme = new Button("Skaičiai su jų prasme");
 		add(btnNuskaityti);                   // "super" Frame adds Button
 		add(btnSkaitmenys);                   
@@ -73,7 +83,7 @@ public class SkaiciaiTekste extends Frame
 		
 		for (int i = 0; i < 10; i++ ) {
 		
-			if ( simbolis.equals ( skaitmenys [ i ] ) ) {
+			if ( (simbolis != null) && simbolis.equals ( skaitmenys [ i ] ) ) {
 			
 				yra_skaitmuo = true;
 			}
@@ -88,25 +98,35 @@ public class SkaiciaiTekste extends Frame
 		try{
 			FileReader fr=new FileReader( "tekstas.txt" );
 			BufferedReader frx = new BufferedReader ( fr );
-			System.out.println ( "duomenų failo turinys:" );
-			String simb;
-			nuskaitytasTekstas = "";
-			ss = new String[ 1000 ];
+			
+			String simb = "";
+			nuskaitytasTekstas = "Pradedam darba\n\n";
+			ss = new String[ 2000 ];
+			tekstas_po_simb = new String[ 2000 ];
+			n = 0;
+			t = 0;
 			while ( ( s = frx.readLine() ) != null ) {
 				
-				System.out.println( s );
 				nuskaitytasTekstas += s + "\n";
 				
-				for ( int i = 0; i < s.length(); i++ ) {
+				for ( int i = 0; i < s.length()-1; i++ ) {
 					
 					simb = s.substring( i, i+1 );
-					if ( yraSkaitmuo ( simb ) ) {
+					
+					if ( simb != null ) {
+					
+						tekstas_po_simb[n] = simb;
+						System.out.print ( tekstas_po_simb[n] );
+						n++;
+					
+						if ( yraSkaitmuo ( simb ) ) {
 						
-						kiekis_skaitmenu++;
-						ss [t] = simb;
-						t++;
-						
+							kiekis_skaitmenu++;
+							ss [t] = simb;
+							t++;
+						}
 					}
+					
 				}
 			}
 			fr.close();
@@ -117,110 +137,149 @@ public class SkaiciaiTekste extends Frame
 		}
 	
 	}
-  
-	public String showNumbersFromFile (){
+	
+	public void showNumbersFromFile (){
 		  
-		String Tekstas = "Skaitmenys tekste: \n\n";
+		Tekstas = "Skaitmenys tekste: \n\n";
 		for( int i = 0; i < t; i++){
 			  
 			Tekstas += ss[i] + " ";
 		}
-		return Tekstas;
 	}
-  
-	/*public void sudarytiSkaiciuMasyva (){
+	
+	public void sveikiSkaiciai () {
+		
+		c =0;
+		sveiku_sk_masyvas = new String[ 2000 ];
+		sveiku_sk_sarasas = "Sveikų skaičių sąrašas:\n ";
+		boolean buvo_skaicius = false;
+				
+		for (int j = 0; j <= n; j++) {
+			
+			sveiku_sk_masyvas[c] = "";
+			
+			while ( yraSkaitmuo ( tekstas_po_simb[ j ] ) ) {
+				
+				sveiku_sk_masyvas[c] += tekstas_po_simb[j];
+				sveiku_sk_sarasas += tekstas_po_simb[ j ];
+				j++;
+				buvo_skaicius = true;
+				
+			}
+			
+			if (buvo_skaicius){
+				
+				j--;
+				sveiku_sk_sarasas += " ";
+				System.out.print ( " " );
+				System.out.print ( sveiku_sk_masyvas[c] );
+				c++;
+				
+			}
+			
+			buvo_skaicius = false;
+		
+		}
+		
+	}
+	public void realusSkaiciai () {
+		d = 0;
+		realiu_sk_masyvas = new String[ 2000 ];
+		realiu_sk_sarasas = "Realių skaičių sąrašas:\n ";
+		boolean buvo_skaicius = false;
+		boolean nunulinti = true;
+		String skaicius = "";
+				
+		for (int j = 0; j < n; j++) {
+			
+			if (nunulinti){
+				
+				realiu_sk_masyvas[d] = "";
+				skaicius = "";
+			}
+			
+			while ( yraSkaitmuo ( tekstas_po_simb[ j ] )) {
+				
+				realiu_sk_masyvas[d] += tekstas_po_simb[ j ];
+				skaicius += tekstas_po_simb[ j ];
+				j++;
+				buvo_skaicius = true;
+				
+			}
+	
+			if ( (tekstas_po_simb[ j ] == ",") && (yraSkaitmuo( tekstas_po_simb[ j + 1] ))){
+				
+				realiu_sk_sarasas += skaicius + ",";
+				buvo_skaicius = false;
+				nunulinti = false;
+				
+			}
+			if (buvo_skaicius){
+				
+				j--;
+				realiu_sk_sarasas += " ";
+				System.out.print ( " " );
+				System.out.print ( realiu_sk_masyvas[d] );
+				d++;
+				nunulinti = true;
+				
+			}
+			
+			buvo_skaicius = false;
+		
+		}
+		if (yraSkaitmuo( tekstas_po_simb[ n ] )){
+			realiu_sk_masyvas[d] += tekstas_po_simb[ n ];
+			realiu_sk_sarasas += tekstas_po_simb[ n ];
+		}
+	}
+		
 		
 
-		int j = 0;
-		String[] sss;
-		skaiciu_masyvas = new double[ 1000 ];
-		
-		for (int y = 0; y < t; y++){
-			
-			int i;
-			
-			sss = ss [ y ].split ( "," );
-				
-			for ( i = 0; i < sss.length; i++) {
-				
-				skaiciu_masyvas[ j + i ] = Double.parseDouble ( sss [ i ] );
-				nr_skaiciu++;
-			}
-			
-			j += i;
-		}
-			
-	}
-	public double maksReiksmeSkaiciuMasyve () {
-		
-		double maks_reiksme_masyve = skaiciu_masyvas[0];
-		
-		for (int i=1; i < nr_skaiciu; i++){
-			
-			if (skaiciu_masyvas[i] > maks_reiksme_masyve) {
-				
-				maks_reiksme_masyve = skaiciu_masyvas[i];
-			}
-		}
-		
-		return maks_reiksme_masyve;
-	}
-	
-	public double skaiciuMasyveSuma () {
-		
-		double suma = 0;
-		
-		for (int i=0; i < nr_skaiciu; i++){
-			
-			suma += skaiciu_masyvas[i];
-		}
-		
-		return Math.round(suma);
-	}
-	
-	public void masyvoVidurkis () {
-		
-		vidurkis = skaiciuMasyveSuma () / nr_skaiciu;
-		
-	}
-	
-	public void masyvoSkaiciaiDidesniUzVidurki () {
-				
-		int y = 0;
-		
-		didesni_uz_vidurki = new double[ 100 ];
-		
-		for (int i=0; i < nr_skaiciu; i++){
-			
-			if ( skaiciu_masyvas[i] > vidurkis) {
-				
-				didesni_uz_vidurki [y] = skaiciu_masyvas [i];
-				didesniu_uz_vid_sarasas += didesni_uz_vidurki [y] + ", ";
-				y++;
-				
-			} else {
-				
-				maz_uz_vid_suma += skaiciu_masyvas[i];
-			}
-		}
-		didesniu_uz_vid_kiekis = y;
-	}
-	*/
 	/* ActionEvent handler */
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		
+		readFromFile();
 		if (evt.getActionCommand().equals("Nuskaityti teksta")){
 			
-			taDisplayTekstas.append("Pradedam darba\n\n" );
-			readFromFile();
-			taDisplayTekstas.append(nuskaitytasTekstas);
+			ta_simboliu += "Belekas".length();
+			taDisplayTekstas.append("Belekas");
+			// Dimension dim = taDisplayTekstas.getPreferredSize();
+			taDisplayTekstas.replaceRange(nuskaitytasTekstas, 0, ta_simboliu );
+			ta_simboliu = nuskaitytasTekstas.length();			
+			
 			
 		}
 		if (evt.getActionCommand().equals("Skaitmenys")){
 			
-			taDisplayTekstas.append(showNumbersFromFile());
+			showNumbersFromFile();
+			ta_simboliu += "Belekas".length();
+			taDisplayTekstas.append("Belekas");			
+			taDisplayTekstas.replaceRange(Tekstas, 0, ta_simboliu );
+			ta_simboliu = Tekstas.length();
+			
 		}
+			
+		if (evt.getActionCommand().equals("Sveiki skaiciai")){
+			
+			sveikiSkaiciai();
+			ta_simboliu += "Belekas".length();
+			taDisplayTekstas.append("Belekas");
+			taDisplayTekstas.replaceRange(sveiku_sk_sarasas, 0, ta_simboliu);
+			ta_simboliu = sveiku_sk_sarasas.length();
+			
+		}
+		if (evt.getActionCommand().equals("Realus skaiciai")){
+			
+			realusSkaiciai();
+			ta_simboliu += "Belekas".length();
+			taDisplayTekstas.append("Belekas");
+			taDisplayTekstas.replaceRange(realiu_sk_sarasas, 0, ta_simboliu);
+			ta_simboliu = realiu_sk_sarasas.length();
+			
+		}
+			
 			/*sudarytiSkaiciuMasyva();
 			taDisplayTekstas.append("Nuskaityta " + (nr_skaiciu) + " skaiciu. \n\n");
 			taDisplayTekstas.append("Maksimali reiksme skaiciu sekoje: " + maksReiksmeSkaiciuMasyve() + "\n");
