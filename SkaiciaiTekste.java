@@ -183,49 +183,41 @@ public class SkaiciaiTekste extends Frame
 		
 	}
 	public void realusSkaiciai () {
+		
 		d = 0;
 		realiu_sk_masyvas = new String[ 2000 ];
 		realiu_sk_sarasas = "Realių skaičių sąrašas:\n ";
-		boolean buvo_skaicius = false;
-		boolean nunulinti = true;
+		boolean rastas_kablelis = false;
 		String skaicius = "";
 				
 		for (int j = 0; j < n; j++) {
 			
-			if (nunulinti){
-				
-				realiu_sk_masyvas[d] = "";
-				skaicius = "";
-			}
+			skaicius = "";
 			
 			while ( yraSkaitmuo ( tekstas_po_simb[ j ] )) {
 				
-				realiu_sk_masyvas[d] += tekstas_po_simb[ j ];
 				skaicius += tekstas_po_simb[ j ];
 				j++;
-				buvo_skaicius = true;
-				
+								
 			}
-	
-			if ( (tekstas_po_simb[ j ] == ",") && (yraSkaitmuo( tekstas_po_simb[ j + 1] ))){
+			if (rastas_kablelis){
 				
-				realiu_sk_sarasas += skaicius + ",";
-				buvo_skaicius = false;
-				nunulinti = false;
-				
-			}
-			if (buvo_skaicius){
-				
-				j--;
-				realiu_sk_sarasas += " ";
-				System.out.print ( " " );
+				realiu_sk_masyvas[d] += skaicius;
+				realiu_sk_sarasas += skaicius + " ";
 				System.out.print ( realiu_sk_masyvas[d] );
+				System.out.print ( realiu_sk_sarasas );
+				System.out.print ( " " );
 				d++;
-				nunulinti = true;
+				rastas_kablelis = false;
 				
+			}				
+				
+			if ( (tekstas_po_simb[ j ].equals ( "," ) ) && (yraSkaitmuo( tekstas_po_simb[ j + 1] ))){
+				
+				realiu_sk_masyvas[d] += skaicius + ",";
+				realiu_sk_sarasas += skaicius + ",";
+				rastas_kablelis = true;
 			}
-			
-			buvo_skaicius = false;
 		
 		}
 		if (yraSkaitmuo( tekstas_po_simb[ n ] )){
