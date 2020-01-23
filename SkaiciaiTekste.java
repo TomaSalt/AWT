@@ -24,11 +24,14 @@ public class SkaiciaiTekste extends Frame
 	private String [] realiu_sk_masyvas;
 	private String realiu_sk_sarasas;
 	private String Tekstas;
+	private String [] su_prasme_sk_masyvas;
+	private String su_prasme_sk_sarasas;
 	private int n = 0;
 	private int b = 0;
 	private int t = 0;
 	private int c = 0;	
 	private int d = 0;
+	private int e = 0;
 	private int kiekis_skaitmenu = 0;
 	private int ta_simboliu = 0;
 	
@@ -43,7 +46,7 @@ public class SkaiciaiTekste extends Frame
 		btnSkaitmenys = new Button("Skaitmenys");
 		btnSveiki = new Button("Sveiki skaiciai");
 		btnRealus = new Button("Realus skaiciai");
-		btnSuPrasme = new Button("Skaičiai su jų prasme");
+		btnSuPrasme = new Button("Skaiciai su ju prasme");
 		add(btnNuskaityti);                   // "super" Frame adds Button
 		add(btnSkaitmenys);                   
 		add(btnSveiki);       
@@ -204,9 +207,6 @@ public class SkaiciaiTekste extends Frame
 				
 				realiu_sk_masyvas[d] += skaicius;
 				realiu_sk_sarasas += skaicius + " ";
-				System.out.print ( realiu_sk_masyvas[d] );
-				System.out.print ( realiu_sk_sarasas );
-				System.out.print ( " " );
 				d++;
 				rastas_kablelis = false;
 				
@@ -225,7 +225,74 @@ public class SkaiciaiTekste extends Frame
 			realiu_sk_sarasas += tekstas_po_simb[ n ];
 		}
 	}
+	public void skaiciaiSuPrasme() {
 		
+		e = 0;
+		String s = "";
+		char ch = 0;
+		su_prasme_sk_masyvas = new String[ 2000 ];
+		su_prasme_sk_sarasas = "Su reikšme skaičių sąrašas:\n ";
+		boolean rastas_kablelis = false;
+		String skaicius = "";
+		boolean ar_raide = false;
+				
+		for (int j = 1; j < n; j++) {
+			
+			skaicius = "";
+			
+			while ( yraSkaitmuo ( tekstas_po_simb[ j ] )) {
+				
+				skaicius += tekstas_po_simb[ j ];
+				j++;
+			
+			}
+			s = tekstas_po_simb[ j ];
+			ch=s.charAt(0);
+			ar_raide = Character.isLetter(ch);
+			
+			if ( ar_raide && ( ( j - 1 ) < n ) && yraSkaitmuo(tekstas_po_simb[ j - 1] )) {
+				
+				su_prasme_sk_masyvas[d] += skaicius;
+				su_prasme_sk_sarasas += skaicius;
+				
+				while (ar_raide){
+					
+					su_prasme_sk_masyvas[d] += tekstas_po_simb[ j ];
+					su_prasme_sk_sarasas += tekstas_po_simb[ j ];
+					j++;
+					s = tekstas_po_simb[ j ];
+					
+					if ( s != null ) {		
+						
+						ch = s.charAt(0);
+						ar_raide = Character.isLetter(ch);
+					}
+				}
+				d++;
+				su_prasme_sk_sarasas += " ";
+			}
+			if (rastas_kablelis){
+				
+				su_prasme_sk_masyvas[d] += skaicius;
+				su_prasme_sk_sarasas += skaicius + " ";
+				d++;
+				rastas_kablelis = false;
+				
+			}				
+				
+			if ( (tekstas_po_simb[ j ].equals ( "," ) ) && (yraSkaitmuo( tekstas_po_simb[ j + 1] ))){
+				
+				su_prasme_sk_masyvas[d] += skaicius + ",";
+				su_prasme_sk_sarasas += skaicius + ",";
+				rastas_kablelis = true;
+			}
+		
+		}
+		if (yraSkaitmuo( tekstas_po_simb[ n ] )){
+			realiu_sk_masyvas[d] += tekstas_po_simb[ n ];
+			realiu_sk_sarasas += tekstas_po_simb[ n ];
+		}
+	}
 		
 
 	/* ActionEvent handler */
@@ -262,6 +329,7 @@ public class SkaiciaiTekste extends Frame
 			ta_simboliu = sveiku_sk_sarasas.length();
 			
 		}
+		
 		if (evt.getActionCommand().equals("Realus skaiciai")){
 			
 			realusSkaiciai();
@@ -271,7 +339,16 @@ public class SkaiciaiTekste extends Frame
 			ta_simboliu = realiu_sk_sarasas.length();
 			
 		}
+		
+		if (evt.getActionCommand().equals("Skaiciai su ju prasme")){
 			
+			skaiciaiSuPrasme();
+			ta_simboliu += "Belekas".length();
+			taDisplayTekstas.append("Belekas");
+			taDisplayTekstas.replaceRange(su_prasme_sk_sarasas, 0, ta_simboliu);
+			ta_simboliu = su_prasme_sk_sarasas.length();
+			
+		}
 			/*sudarytiSkaiciuMasyva();
 			taDisplayTekstas.append("Nuskaityta " + (nr_skaiciu) + " skaiciu. \n\n");
 			taDisplayTekstas.append("Maksimali reiksme skaiciu sekoje: " + maksReiksmeSkaiciuMasyve() + "\n");
