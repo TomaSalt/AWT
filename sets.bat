@@ -1,0 +1,1 @@
+set CLASSPATH=C:\Users\Septintas\Desktop\AWT\externals\mysql-connector-java-8.0.16\mysql-connector-java-8.0.16.jar;C:\Users\Septintas\Desktop\AWT\
