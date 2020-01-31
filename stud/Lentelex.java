@@ -11,7 +11,8 @@
 		protected String[] pav_lent_grafu;		 									// lenteles grafos stulpeliu pavadinimai, su tarpais ir stulpeliu skyrimo simboliais, pilnu plociu, pvz.: { "| laikas |", " atstumas |" }
 		
 		protected String viskas = "";
-	
+		protected String hor_eilute = "";
+		protected String kepure = "";
 		protected int[] len_iki_stulp = { 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0, 0 };				// atstumu iki konkretaus stulpelio (simboliais) seka (masyvas)
 		protected int total_len = 0;		
 	
@@ -34,9 +35,7 @@
 		* skPoz - metodas nustatantis vidiniu klases savybiu - atstumu (simboliais) iki stulpeliu masyvo len_iki_stulp ir visos lenteles plocio (simboliais) total_sum reiksmes
 		*/
 		protected void skPoz() {
-			
-			int i = 0;
-			
+			int i = 0;				
 			for ( ; i < pav_lent_grafu.length; i++ ) {									// "prabegam" visu stulpeliu pavadinimu masyva
 			
 				len_iki_stulp [ i ] = total_len;										// i-tajam stulpeliui priskiriam iki tol suskaiciuota lenteles plocio ( simboliais ) total_len reiksme
@@ -48,14 +47,24 @@
 		/**
 		* horizEil - metodas "nubreziantis" lenteles plocio horizontale eilute
 		*/
-		public String horizEil() {
-			String hor_eilute = "\n";
+		public void sudarytiHorizEil() {
+			
+			hor_eilute = "\n";
+			
 			for ( int i = 0; i < total_len; i++ ) {										// brezimas tai vieno "-" simbolio rasymas tiek kartu, kokio plocio (simboliais) yra lentele
 			
 				hor_eilute += "-";
 			}
+			
 			hor_eilute += "\n";
-			return hor_eilute;
+		}
+		
+		/**
+		* horizEil - metodas "nubreziantis" lenteles plocio horizontale eilute
+		*/
+		public void horizEil() {
+			
+			viskas += hor_eilute;			
 		}
 
 		/**
@@ -63,11 +72,19 @@
 		*/
 		public void antraste() {
 			
+			horizEil();
+			
+			if ( ! kepure.equals( "" ) ) {
+				
+				viskas += kepure;
+			}
+			
 			for (int i = 0; i <  pav_lent_grafu.length; i++ ) {							// ima po viena stulpeli ..
 
 				viskas += pav_lent_grafu [ i ];								// .. ir ji "uzraso" - isveda 
 			}
 			viskas += "\n";
+			horizEil();
 		}
 
 		/**
@@ -81,10 +98,13 @@
 		* Lentele - specialus metodas - klases konstruktorius - turi vadintis taip pat kaip klase
 		* @param String[] duomenu_kitimo_lentele -  lenteles grafos - stulpeliu pavadinimai, rekomenduojama su tarpais ir stulpeliu skyrimo simboliais, pilnu plociu, pvz.: { "| laikas |", " atstumas |" }
 		*/
-		public Lentelex ( String[] pavad_lent_grafu ) {
+		public Lentelex ( String[] pavad_lent_grafu, String kepure ) {
+			
+			this.kepure = kepure;
 
-			pav_lent_grafu = pavad_lent_grafu;										// isimenamos lenteles grafos
-			skPoz();															// skaiciuojamos atstumu (simboliais) iki stulpeliu masyvo len_iki_stulp ir visos lenteles plocio (simboliais) total_sum reiksmes
+			pav_lent_grafu = pavad_lent_grafu;				// isimenamos lenteles grafos
+			skPoz();								// skaiciuojamos atstumu (simboliais) iki stulpeliu masyvo len_iki_stulp ir visos lenteles plocio (simboliais) total_sum reiksmes
+			sudarytiHorizEil();
 		}
 		
 		/**
@@ -107,8 +127,8 @@
 				}
 			}
 			
-			viskas += i_lentele + horizEil();											// uzrasoma suformuota eilute
-																				// nubreziama horizontali linija
+			viskas += i_lentele; 											// uzrasoma suformuota eilute
+			horizEil();																	// nubreziama horizontali linija
 		}
 		
 		public String atiduok() {

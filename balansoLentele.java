@@ -19,18 +19,23 @@ public class balansoLentele extends Frame
 	static final String USER = "root";
 	static final String PASS = "";
 	private int ta_simboliu = 0;
+	static String ieskomas_barkodas = "";
 
 	public static void main(String[] args) {
+		
+		new balansoLentele();
+	
+	}
+
+	public void rodyti_rezultata() {
 		Connection conn = null;
 		Statement stmt = null;
 		
-		new balansoLentele();
 		try{
-
 																																										//STEP 2: Register JDBC driver
 			// Class.forName( "com.mysql.jdbc.Driver" );																				 // .newInstance();
 
-																																										//STEP 3: Open a connection
+																														//STEP 3: Open a connection
 			System.out.println( "Connecting to database..." );
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 																																//STEP 4: Execute a query
@@ -41,7 +46,7 @@ public class balansoLentele extends Frame
 				"SELECT "
 					+ "`id`"
 					+ ", `menuo`"
-					+ ", `id_prekes`"
+					+ ", `balanso_lentele`.`id_prekes`"
 					+ ", `id_prekiu_grupes`"
 					+ ", `kiekis_gauta`"
 					+ ", `suma_gauta` "
@@ -49,11 +54,17 @@ public class balansoLentele extends Frame
 					+ ", `suma_parduota` "
 				+ "FROM " 
 					+ "`balanso_lentele`"
+				+ "LEFT JOIN `prekes_tiekejai` ON("
+					+ "`prekes_tiekejai`.`id_prekes` = `balanso_lentele`.`id_prekes`)"
+				+ "WHERE"
+					+ "`prekes_tiekejai`.`barkodas` LIKE '%" + ieskomas_barkodas +"%'"
 					;
+			System.out.println(sql);
 			ResultSet rs = stmt.executeQuery(sql);
 			String[] proceso_antr = { "|    id    |", "   menuo  |", " id_prekes  |", " id_prekiu_grupes  |", " kiekis_gauta  |", " suma_gauta   |", " kiekis_parduota  |", " suma_parduota  |" }; 
 			String[] reiksmes = { "", "", "", "", "", "", "", "" };
-			Lentelex lent = new Lentelex ( proceso_antr );
+			String kepure =  "|        |         |             id           |       gauta           |       parduota        |\n"; //  "     menuo  |   id_prekes   |  id_grupes  |   id_rinkos  |   kiekis_gauta   | suma_gauta | kiekis_parduota | suma_parduota |" );
+			Lentelex lent = new Lentelex ( proceso_antr, kepure );
 				
 			lent.horizEil();
 			lent.antraste();
@@ -71,14 +82,14 @@ public class balansoLentele extends Frame
 				int kiekis_parduota = rs.getInt ( "kiekis_parduota" );
 				double suma_parduota = rs.getDouble ( "suma_parduota" );				
 																																									//Display values
-				reiksmes [0] = String.valueOf(id);
-				reiksmes [1] = String.valueOf(menuo);
-				reiksmes [2] = String.valueOf(id_prekes);
-				reiksmes [3] = String.valueOf(id_prekiu_grupes);
-				reiksmes [4] = String.valueOf(kiekis_gauta);
-				reiksmes [5] = String.valueOf(suma_gauta);
-				reiksmes [6] = String.valueOf(kiekis_parduota);
-				reiksmes [7] = String.valueOf(suma_parduota);
+				reiksmes [0] = String.format("%5d", id);
+				reiksmes [1] = String.format(" %6d", menuo);
+				reiksmes [2] = String.format(" %5d", id_prekes);
+				reiksmes [3] = String.format(" %5d", id_prekiu_grupes);
+				reiksmes [4] = String.format(" %5d", kiekis_gauta);
+				reiksmes [5] = String.format(" %11.2f", suma_gauta);
+				reiksmes [6] = String.format(" %5d", kiekis_parduota);
+				reiksmes [7] = String.format(" %11.2f", suma_parduota);
 
 				lent.iLentele (reiksmes);
 				
@@ -91,6 +102,7 @@ public class balansoLentele extends Frame
 		} catch ( SQLException se ) {
 																																										//Handle errors for JDBC
 			se.printStackTrace();
+			
 		} catch ( Exception e ) {
 																																										//Handle errors for Class.forName
 			e.printStackTrace();
@@ -133,7 +145,7 @@ public class balansoLentele extends Frame
 		taDisplayTekstas = new TextArea(50, 80); // Construct the TextField
 		taDisplayTekstas.setEditable(false);       // read-only
 		add(taDisplayTekstas);                     // "super" Frame adds TextField
-		tfInput.addKeyListener(this);
+		// tfInput.addKeyListener(this);
 		// tfInput TextField (source) fires KeyEvent.
 		// tfInput adds "this" object as a KeyEvent listener.
 		
@@ -153,7 +165,8 @@ public class balansoLentele extends Frame
 	
 	/** KeyEvent handlers */
 	@Override public void keyTyped(KeyEvent evt) {
-		taDisplayTekstas.append("" +evt.getKeyChar());
+//		taDisplayTekstas.append("" +evt.getKeyChar());
+//		ieskomas_barkodas += Character.getNumericValue(evt.getKeyChar());
 		ta_simboliu += 1;
 	}
 	
@@ -166,10 +179,11 @@ public class balansoLentele extends Frame
 	public void actionPerformed(ActionEvent evt) {
 		
 		if (evt.getActionCommand().equals("Nuskaityti duomenu baze")){
-			
+			ieskomas_barkodas = tfInput.getText();
 			ta_simboliu += "Belekas".length();
 			taDisplayTekstas.append("Belekas");
 			// Dimension dim = taDisplayTekstas.getPreferredSize();
+			rodyti_rezultata();
 			taDisplayTekstas.replaceRange(isvedami_duomenys, 0, ta_simboliu );
 			ta_simboliu = isvedami_duomenys.length();			
 			

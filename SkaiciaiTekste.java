@@ -240,7 +240,7 @@ public class SkaiciaiTekste extends Frame
 			
 			skaicius = "";
 			
-			while ( yraSkaitmuo ( tekstas_po_simb[ j ] )) {
+			while ( yraSkaitmuo ( tekstas_po_simb[ j ] ) && j < n) {
 				
 				skaicius += tekstas_po_simb[ j ];
 				j++;
@@ -252,46 +252,47 @@ public class SkaiciaiTekste extends Frame
 			
 			if ( ar_raide && ( ( j - 1 ) < n ) && yraSkaitmuo(tekstas_po_simb[ j - 1] )) {
 				
-				su_prasme_sk_masyvas[d] += skaicius;
+				su_prasme_sk_masyvas[e] += skaicius;
 				su_prasme_sk_sarasas += skaicius;
 				
-				while (ar_raide){
+				while (ar_raide && j < n){
 					
-					su_prasme_sk_masyvas[d] += tekstas_po_simb[ j ];
+					su_prasme_sk_masyvas[e] += tekstas_po_simb[ j ];
 					su_prasme_sk_sarasas += tekstas_po_simb[ j ];
 					j++;
-					s = tekstas_po_simb[ j ];
-					
-					if ( s != null ) {		
-						
+					if (tekstas_po_simb[ j ] != null){
+						s = tekstas_po_simb[ j ];
 						ch = s.charAt(0);
 						ar_raide = Character.isLetter(ch);
+					} else {
+						break;
 					}
+					
 				}
-				d++;
+				e++;
 				su_prasme_sk_sarasas += " ";
 			}
 			if (rastas_kablelis){
 				
-				su_prasme_sk_masyvas[d] += skaicius;
+				su_prasme_sk_masyvas[e] += skaicius;
 				su_prasme_sk_sarasas += skaicius + " ";
-				d++;
+				e++;
 				rastas_kablelis = false;
 				
 			}				
 				
 			if ( (tekstas_po_simb[ j ].equals ( "," ) ) && (yraSkaitmuo( tekstas_po_simb[ j + 1] ))){
 				
-				su_prasme_sk_masyvas[d] += skaicius + ",";
+				su_prasme_sk_masyvas[e] += skaicius + ",";
 				su_prasme_sk_sarasas += skaicius + ",";
 				rastas_kablelis = true;
 			}
 		
 		}
-		if (yraSkaitmuo( tekstas_po_simb[ n ] )){
-			realiu_sk_masyvas[d] += tekstas_po_simb[ n ];
+/*		if (yraSkaitmuo( tekstas_po_simb[ n ] )){
+			realiu_sk_masyvas[e] += tekstas_po_simb[ n ];
 			realiu_sk_sarasas += tekstas_po_simb[ n ];
-		}
+		}*/
 	}
 		
 
