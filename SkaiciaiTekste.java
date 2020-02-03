@@ -250,21 +250,25 @@ public class SkaiciaiTekste extends Frame
 			ch=s.charAt(0);
 			ar_raide = Character.isLetter(ch);
 			
-			if ( ar_raide && ( ( j - 1 ) < n ) && yraSkaitmuo(tekstas_po_simb[ j - 1] )) {
+			if ( ar_raide && ( ( j - 1 ) < n ) && yraSkaitmuo(tekstas_po_simb[ j - 1] ) ) {
 				
 				su_prasme_sk_masyvas[e] += skaicius;
 				su_prasme_sk_sarasas += skaicius;
 				
-				while (ar_raide && j < n){
+				while (ar_raide && ( j < ( n - 1 ) ) ) {
 					
 					su_prasme_sk_masyvas[e] += tekstas_po_simb[ j ];
 					su_prasme_sk_sarasas += tekstas_po_simb[ j ];
 					j++;
-					if (tekstas_po_simb[ j ] != null){
+					
+					if ( tekstas_po_simb[ j ] != null ){
+						
 						s = tekstas_po_simb[ j ];
 						ch = s.charAt(0);
 						ar_raide = Character.isLetter(ch);
+						
 					} else {
+						
 						break;
 					}
 					
@@ -281,7 +285,7 @@ public class SkaiciaiTekste extends Frame
 				
 			}				
 				
-			if ( (tekstas_po_simb[ j ].equals ( "," ) ) && (yraSkaitmuo( tekstas_po_simb[ j + 1] ))){
+			if ( (tekstas_po_simb[ j ].equals ( "," ) ) && (yraSkaitmuo( tekstas_po_simb[ j + 1] ) ) ) {
 				
 				su_prasme_sk_masyvas[e] += skaicius + ",";
 				su_prasme_sk_sarasas += skaicius + ",";
@@ -289,10 +293,12 @@ public class SkaiciaiTekste extends Frame
 			}
 		
 		}
-/*		if (yraSkaitmuo( tekstas_po_simb[ n ] )){
+		
+		if ( yraSkaitmuo( tekstas_po_simb[ n ] ) ) {
+			
 			realiu_sk_masyvas[e] += tekstas_po_simb[ n ];
 			realiu_sk_sarasas += tekstas_po_simb[ n ];
-		}*/
+		}
 	}
 		
 
