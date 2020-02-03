@@ -225,11 +225,23 @@ public class SkaiciaiTekste extends Frame
 			realiu_sk_sarasas += tekstas_po_simb[ n ];
 		}
 	}
+	
+	public static boolean arRaide ( String simb ) {
+	
+		boolean ar_raide = false;
+		char ch = 0;		
+		
+		ch = simb.charAt(0);
+		ar_raide = Character.isLetter( ch ) || simb.equals( "%" ) || simb.equals ( "." ) ;
+		
+		return ar_raide;
+	}
+	
 	public void skaiciaiSuPrasme() {
 		
 		e = 0;
 		String s = "";
-		char ch = 0;
+
 		su_prasme_sk_masyvas = new String[ 2000 ];
 		su_prasme_sk_sarasas = "Su reikšme skaičių sąrašas:\n ";
 		boolean rastas_kablelis = false;
@@ -244,54 +256,52 @@ public class SkaiciaiTekste extends Frame
 				
 				skaicius += tekstas_po_simb[ j ];
 				j++;
-			
 			}
-			s = tekstas_po_simb[ j ];
-			ch=s.charAt(0);
-			ar_raide = Character.isLetter(ch);
 			
-			if ( ar_raide && ( ( j - 1 ) < n ) && yraSkaitmuo(tekstas_po_simb[ j - 1] ) ) {
+			if ( j < n ) {
+			
+				ar_raide = arRaide ( tekstas_po_simb[ j ] );
+
+				if ( ar_raide && ( ( j - 1 ) < n ) && yraSkaitmuo ( tekstas_po_simb[ j - 1 ] ) ) {
 				
-				su_prasme_sk_masyvas[e] += skaicius;
-				su_prasme_sk_sarasas += skaicius;
+					su_prasme_sk_masyvas [ e ] += skaicius;
+					su_prasme_sk_sarasas += skaicius;
 				
-				while (ar_raide && ( j < ( n - 1 ) ) ) {
+					while ( ar_raide && ( j < n ) ) {
 					
-					su_prasme_sk_masyvas[e] += tekstas_po_simb[ j ];
-					su_prasme_sk_sarasas += tekstas_po_simb[ j ];
-					j++;
+						su_prasme_sk_masyvas [ e ] += tekstas_po_simb[ j ];
+						su_prasme_sk_sarasas += tekstas_po_simb[ j ];
+						j++;
 					
-					if ( tekstas_po_simb[ j ] != null ){
+						if ( j < n ){
 						
-						s = tekstas_po_simb[ j ];
-						ch = s.charAt(0);
-						ar_raide = Character.isLetter(ch);
+							ar_raide = arRaide ( tekstas_po_simb[ j ] );
 						
-					} else {
+						} else {
 						
-						break;
+							break;
+						}
+					
 					}
-					
+					e++;
+					su_prasme_sk_sarasas += "\n";
 				}
-				e++;
-				su_prasme_sk_sarasas += " ";
+				
+				if ( rastas_kablelis ) {
+				
+					su_prasme_sk_masyvas [ e ] += skaicius;
+					su_prasme_sk_sarasas += skaicius + "\n";
+					e++;
+					rastas_kablelis = false;
+				}				
+				
+				if ( ( j < ( n - 1) ) && ( tekstas_po_simb[ j ].equals ( "," ) ) && ( yraSkaitmuo( tekstas_po_simb [ j + 1 ] ) ) ) {
+				
+					su_prasme_sk_masyvas[e] += skaicius + ",";
+					su_prasme_sk_sarasas += skaicius + ",";
+					rastas_kablelis = true;
+				}
 			}
-			if (rastas_kablelis){
-				
-				su_prasme_sk_masyvas[e] += skaicius;
-				su_prasme_sk_sarasas += skaicius + " ";
-				e++;
-				rastas_kablelis = false;
-				
-			}				
-				
-			if ( (tekstas_po_simb[ j ].equals ( "," ) ) && (yraSkaitmuo( tekstas_po_simb[ j + 1] ) ) ) {
-				
-				su_prasme_sk_masyvas[e] += skaicius + ",";
-				su_prasme_sk_sarasas += skaicius + ",";
-				rastas_kablelis = true;
-			}
-		
 		}
 		
 		if ( yraSkaitmuo( tekstas_po_simb[ n ] ) ) {
@@ -352,6 +362,8 @@ public class SkaiciaiTekste extends Frame
 			skaiciaiSuPrasme();
 			ta_simboliu += "Belekas".length();
 			taDisplayTekstas.append("Belekas");
+			// ta_simboliu = su_prasme_sk_sarasas.length();
+			
 			taDisplayTekstas.replaceRange(su_prasme_sk_sarasas, 0, ta_simboliu);
 			ta_simboliu = su_prasme_sk_sarasas.length();
 			
